@@ -17,4 +17,4 @@ services:
         build:
             context: .
         ports:
-            - "8080-8081:8080"
+            - "8080-8081:8080" 
