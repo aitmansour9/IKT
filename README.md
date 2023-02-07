@@ -20,3 +20,29 @@ services:
             - "8080-8081:8080" 
    
 ```
+Данная инструкция запустит в docker-compose приложение web. В build указывается место расположения образа (в нашем случае Dockerfile лежит в корне директории) на основе которого собирается контейнер. В ports открываем порты 8080 и 8081 которые будут связаны с портом 8080 внутри контейнера. Запустил контейнеры с помощью команды docker-compose up --build --scale web=2 и проверил, что отвечают оба.
+
+- Создал файл nginx.conf с:
+```
+worker_processes auto;
+
+events {
+
+}
+
+http {
+    upstream main-app {
+        hash $cookie_key;
+        server web:8080;
+        server web:8081;
+    }
+
+    server {
+        listen 8080;
+
+        location / {
+            proxy_pass http://main-app;
+        }
+    }
+}
+```
